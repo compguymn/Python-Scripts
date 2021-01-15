@@ -1,0 +1,60 @@
+#Compares MD5 hash to a list of clear text words such in a file.
+#In this case, the tools is used to find MD5 hashes originalled, I updated it to allow it to use SHA 1 and SHA 256. 
+#
+
+
+import hashlib 
+print("########## MD5 Hash Pass Check #############")
+print("We take a MD5 salted password and compare them to clear password list")
+         
+# To check if the password 
+# found or not. 
+pass_found = 0
+hash_type = input ("Enter Hash type as shown: md5 , sha1 , sha 256")
+input_hash = input("Enter the hashed password:") 
+pass_list = input("\nEnter passwords filename including path(root / home/):") 
+   
+try: 
+    # trying to open the password file. 
+    pass_file = open(pass_list, 'r')               
+except: 
+    print("Error:") 
+    print(pass_list, "is not found.\nPlease give the path of file correctly.")  
+    quit() 
+  
+  
+# comparing the input_hash with the hashes 
+# of the words in password file, 
+# and finding password. 
+  
+for word in pass_file: 
+    # encoding the word into utf-8 format 
+    enc_word = word.encode('utf-8')   
+              
+    # Hasing a word into md5 hash
+    if hash_type == 'md5':
+    
+        hash_word = hashlib.md5(enc_word.strip())    
+    elif hash_type == 'sha1':
+        hash_word = hashlib.sha1(enc_word.strip())
+    elif hash_type == 'sha256':
+        hash_word = hashlib.sha256(enc_word.strip())
+    else:
+        print("error, something wrong")
+
+        
+    # digesting that hash into a hexa decimal value      
+    digest = hash_word.hexdigest()          
+       
+    if digest == input_hash: 
+        # comparing hashes 
+        print("Password found.\nThe password is:", word)    
+        pass_found = 1
+        break
+  
+# if password is not found. 
+if not pass_found: 
+    print("Password is not found in the", pass_list, "file")    
+    print('\n') 
+print("*****************  Thank you  **********************") 
+
